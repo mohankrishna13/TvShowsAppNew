@@ -1,54 +1,36 @@
 package com.mohankrishna.tvshowsapp.presentation_layer.viewModels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.mohankrishna.tvshowsapp.BuildConfig
 import com.mohankrishna.tvshowsapp.domain.model.ResponseListerner
 import com.mohankrishna.tvshowsapp.domain.repository.commonRepository.CommonRepositoryModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 class MainActivityViewModel(var commonRepositoryModel: CommonRepositoryModel):ViewModel() {
-    var data=MutableLiveData<ResponseListerner>()
-    fun getTrendingTvShowsData(){
-        viewModelScope.launch {
-           var responseListerner=
-               commonRepositoryModel.getTrendingTvShowsData(BuildConfig.API_KEY)
-            data=responseListerner
-        }
+    fun searchTvShows(newText: String) = liveData{
+        var responseListerner = commonRepositoryModel.getTvShowsByName(newText)
+        emit(responseListerner)
     }
-    fun getWeekTvShowsData(){
-        viewModelScope.launch {
-            var responseListerner = commonRepositoryModel.getWeekTvShowsData(BuildConfig.API_KEY)
-            observerTheData(responseListerner)
-        }
+    fun getTrendingTvShowsData()= liveData{
+        var responseListerner=
+            commonRepositoryModel.getTrendingTvShowsData(BuildConfig.API_KEY)
+        emit(responseListerner)
     }
-    fun searchTvShows(newText: String) {
-       viewModelScope.launch {
-              var responseListerner = commonRepositoryModel.getTvShowsByName(newText)
-
-            observerTheData(responseListerner)
-       }
+    fun getWeekTvShowsData()= liveData{
+            var responseListerner = commonRepositoryModel
+                .getWeekTvShowsData(BuildConfig.API_KEY)
+            emit(responseListerner)
     }
-    fun observerTheData(responseListerner: MutableLiveData<ResponseListerner>) {
-        responseListerner.observeForever(Observer {
-            when(it){
-                is ResponseListerner.Error->{
-                    data.value=ResponseListerner.Error(it.error)
-                }
-                is ResponseListerner.Failure->{
-                    data.value = ResponseListerner.Failure(it.error)
-                }
-                is ResponseListerner.Success->{
-                    data.value = ResponseListerner.Success(it.data)
-                }is ResponseListerner.Loading->{
-                data.value=ResponseListerner.Loading()
-            }
-            }
-        })
-
-    }
-
-
 }

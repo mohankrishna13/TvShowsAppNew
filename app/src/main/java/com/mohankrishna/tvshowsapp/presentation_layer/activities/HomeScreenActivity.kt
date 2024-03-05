@@ -1,8 +1,10 @@
 package com.mohankrishna.tvshowsapp.presentation_layer.activities
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
@@ -27,28 +29,15 @@ class HomeScreenActivity : AppCompatActivity() {
         homeScreenAdapter = HomeScreenAdapter(arrayListOf())
         homeScreenBinding.myRecyclerview.adapter = homeScreenAdapter
         homeScreenBinding.myRecyclerview.layoutManager = GridLayoutManager(this, 2)
+        getTrendingTvShows()
+    }
 
-        homeScreenViewModel.getTrendingTvShowsData()
-        homeScreenViewModel.data.observeForever( Observer {
-            when (it) {
-                is ResponseListerner.Loading -> {
-                    homeScreenBinding.progressbarLayout.visibility = View.VISIBLE
-                }
-                is ResponseListerner.Success -> {
-                    it.data?.let { it1 -> homeScreenAdapter.updateProductsList(it1) }
-                    homeScreenBinding.progressbarLayout.visibility = View.GONE
-                }
-                is ResponseListerner.Failure -> {
-                    homeScreenBinding.progressbarLayout.visibility = View.GONE
-                }
-
-                else -> {
-                    homeScreenBinding.progressbarLayout.visibility = View.GONE
-                }
+    private fun getTrendingTvShows() {
+        homeScreenViewModel.getTrendingTvShowsData().observe(this) {
+            it.observe(this) { responseData ->
+                setDataToViews(responseData)
             }
-        })
-
-
+        }
     }
 
 
@@ -63,15 +52,47 @@ class HomeScreenActivity : AppCompatActivity() {
 
             override fun onQueryTextChange(newText: String): Boolean {
                 if(newText.isEmpty() || newText.isBlank()){
-                    homeScreenViewModel.getWeekTvShowsData()
-
+                    getTvShowsByWeek()
                 }else{
-                    homeScreenViewModel.searchTvShows(newText)
+                    getSearchViewData(newText)
                 }
                 return true
             }
         })
         return true
     }
+    private fun getTvShowsByWeek() {
+        homeScreenViewModel.getWeekTvShowsData().observe(this) {
+            it.observe(this) { responseData ->
+                setDataToViews(responseData)
+            }
+        }
+    }
+    private fun getSearchViewData(newText: String) {
+        homeScreenViewModel.searchTvShows(newText).observe(this) {
+            it.observe(this) { responseData ->
+                setDataToViews(responseData)
+            }
+        }
+    }
+
+    private fun setDataToViews(it: ResponseListerner?) {
+        when (it) {
+            is ResponseListerner.Loading -> {
+                homeScreenBinding.progressbarLayout.visibility = View.VISIBLE
+            }
+            is ResponseListerner.Success -> {
+                it.data?.let { it1 -> homeScreenAdapter.updateProductsList(it1) }
+                homeScreenBinding.progressbarLayout.visibility = View.GONE
+            }
+            is ResponseListerner.Failure -> {
+                homeScreenBinding.progressbarLayout.visibility = View.GONE
+            }
+            else -> {
+                homeScreenBinding.progressbarLayout.visibility = View.GONE
+            }
+        }
+    }
+
 
 }

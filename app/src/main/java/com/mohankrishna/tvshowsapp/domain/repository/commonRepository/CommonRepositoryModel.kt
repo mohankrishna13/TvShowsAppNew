@@ -37,14 +37,18 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository,
         if(internetModeProvider.isNetworkConnected){
             response= onlineTvShowsRepository.getWeekTrendingShows(api_key)
         }else{
+            CoroutineScope(Dispatchers.IO).launch {
                 localTvShowsRepository.getTrendingTvShows().collect{
-                    response.value= ResponseListerner.Success(it)
+                    withContext(Dispatchers.Main){
+                        response.value= ResponseListerner.Success(it)
+                    }
                 }
+            }
         }
         return response
     }
 
-    suspend fun getTrendingTvShowsData(api_key:String):MutableLiveData<ResponseListerner>{
+    fun getTrendingTvShowsData(api_key:String):MutableLiveData<ResponseListerner>{
         var response= MutableLiveData<ResponseListerner>()
         if(internetModeProvider.isNetworkConnected){
             response= onlineTvShowsRepository.getTrendingTvShows(api_key)
