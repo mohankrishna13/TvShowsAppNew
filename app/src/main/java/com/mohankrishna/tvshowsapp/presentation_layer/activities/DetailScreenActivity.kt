@@ -10,13 +10,11 @@ import com.mohankrishna.tvshowsapp.ModelClass.Result
 import com.mohankrishna.tvshowsapp.R
 import com.mohankrishna.tvshowsapp.databinding.ActivityDetailScreenBinding
 import com.mohankrishna.tvshowsapp.presentation_layer.adapters.PaginationAdapter
-import com.mohankrishna.tvshowsapp.presentation_layer.utils.InternetModeProvider
 import com.mohankrishna.tvshowsapp.presentation_layer.viewModels.DetailsScreenViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailScreenActivity : AppCompatActivity() {
     lateinit var binding: ActivityDetailScreenBinding

@@ -6,8 +6,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.mohankrishna.tvshowsapp.ModelClass.Result
-import com.mohankrishna.tvshowsapp.ModelClass.TvShowsDataModel
-import com.mohankrishna.tvshowsapp.data_layer.online.retrofit.TvShowsApiInterface
 import com.mohankrishna.tvshowsapp.domain.repository.commonRepository.CommonRepositoryModel
 import com.mohankrishna.tvshowsapp.domain.repository.online.PagingRepository.PaginationDataSource
 import kotlinx.coroutines.launch

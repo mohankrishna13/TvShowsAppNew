@@ -1,14 +1,11 @@
 package com.mohankrishna.tvshowsapp.presentation_layer.activities
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mohankrishna.tvshowsapp.R
 import com.mohankrishna.tvshowsapp.databinding.ActivityHomeScreenBinding
