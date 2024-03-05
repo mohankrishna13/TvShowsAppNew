@@ -58,7 +58,7 @@ class DetailScreenActivity : AppCompatActivity() {
                 singleData?.is_favourite=true
 
                 if (singleData != null) {
-                    myviewModel.setFavouiriteFlag(singleData)
+                    myviewModel.setFavouriteFlag(singleData)
                 }
             }
 
@@ -73,7 +73,7 @@ class DetailScreenActivity : AppCompatActivity() {
 
                 if (singleData != null) {
                     if (singleData != null) {
-                        myviewModel.setFavouiriteFlag(singleData)
+                        myviewModel.setFavouriteFlag(singleData)
                     }
                 }
             }

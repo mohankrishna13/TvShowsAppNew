@@ -21,7 +21,7 @@ class DetailsScreenViewModel(var commonRepositoryModel: CommonRepositoryModel):V
             PaginationDataSource(commonRepositoryModel,searchId.value!!.toInt())
     }.flow
 
-    fun setFavouiriteFlag(updatedData:Result){
+    fun setFavouriteFlag(updatedData:Result){
         viewModelScope.launch {
            commonRepositoryModel.updateOfflineData(updatedData)
         }
