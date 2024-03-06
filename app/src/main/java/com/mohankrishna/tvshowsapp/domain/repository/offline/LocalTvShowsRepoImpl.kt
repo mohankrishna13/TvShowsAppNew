@@ -20,4 +20,10 @@ class LocalTvShowsRepoImpl(var tvShowsDao: TvShowsDao):LocalTvShowsRepository {
     override fun getTvShowDataByName(tvShowsData: String):Flow<List<Result>> {
         return tvShowsDao.getTvShowsByName(tvShowsData)
     }
+
+    override suspend fun getTvShowsDataByLimit(limit: Int, offset: Int):List<Result>{
+        return tvShowsDao.getTvShowsDataByLimit(limit,offset)
+    }
+
+
 }

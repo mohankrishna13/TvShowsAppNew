@@ -13,11 +13,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class OnlineTvShowsRepoImpl(var tvShowsApiInterface: TvShowsApiInterface,
-                            var localDatabaseDao: LocalTvShowsRepository): OnlineTvShowsRepository {
+class OnlineTvShowsRepoImpl(var tvShowsApiInterface: TvShowsApiInterface): OnlineTvShowsRepository {
     override suspend fun getTrendingTvShows(apiKey: String,pageNumber:Int):
             Response<TvShowsDataModel> {
         return tvShowsApiInterface.getDayTrendingTvShows(pageNumber,apiKey)
+
         //Without pagination Don't delete
        /* var result = MutableLiveData<ResponseListerner>()
         CoroutineScope(Dispatchers.IO).launch{

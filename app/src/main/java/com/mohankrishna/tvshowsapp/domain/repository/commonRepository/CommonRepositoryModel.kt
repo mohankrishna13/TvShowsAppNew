@@ -1,4 +1,5 @@
 package com.mohankrishna.tvshowsapp.domain.repository.commonRepository
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mohankrishna.tvshowsapp.BuildConfig
 import com.mohankrishna.tvshowsapp.ModelClass.Result
@@ -9,13 +10,13 @@ import com.mohankrishna.tvshowsapp.domain.repository.online.tvShowsRepository.On
 import com.mohankrishna.tvshowsapp.presentation_layer.utils.InternetModeProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
-class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository,
-                            var onlineTvShowsRepository: OnlineTvShowsRepository,
-                            var internetModeProvider: InternetModeProvider) {
-
+class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository, var onlineTvShowsRepository: OnlineTvShowsRepository, var internetModeProvider: InternetModeProvider) {
 
     fun updateOfflineData(id: Result) {
         CoroutineScope(Dispatchers.IO).launch{
@@ -45,8 +46,23 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository,
         return response*/
     }
 
-    suspend fun getTrendingTvShowsData(api_key:String,pageNumber:Int):Response<TvShowsDataModel>{
-      return onlineTvShowsRepository.getTrendingTvShows(api_key,pageNumber)
+    suspend fun getTrendingTvShowsData(api_key:String,pageNumber:Int):List<Result>{
+        var response=onlineTvShowsRepository.getTrendingTvShows(api_key,pageNumber)
+        if(response.isSuccessful){
+            var resultList=response.body()?.results
+            if(resultList!=null){
+                for(item in resultList!!){
+                    localTvShowsRepository.insertTvShowData(item)
+                }
+            }
+            var limit=20
+            var offset=pageNumber*limit
+
+            return localTvShowsRepository.getTvShowsDataByLimit(limit,offset)
+
+        }else{
+            return emptyList()
+        }
 
       //Without pagination Don't delete this code
        /* var response= MutableLiveData<ResponseListerner>()

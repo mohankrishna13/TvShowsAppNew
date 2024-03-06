@@ -8,4 +8,5 @@ interface LocalTvShowsRepository {
     fun insertTvShowData(tvShowsData: Result)
     fun updateTvShowData(tvShowsData: Result)
     fun getTvShowDataByName(tvShowsData: String):Flow<List<Result>>
+    suspend fun getTvShowsDataByLimit(limit:Int,offset:Int):List<Result>
 }

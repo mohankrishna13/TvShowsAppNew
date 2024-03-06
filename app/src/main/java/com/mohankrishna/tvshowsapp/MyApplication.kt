@@ -50,7 +50,7 @@ class MyApplication:Application() {
     }
     val retrofitModlues= module {
         single { getRefrofitInstance() }
-        single<OnlineTvShowsRepository> { OnlineTvShowsRepoImpl(get(),get()) }
+        single<OnlineTvShowsRepository> { OnlineTvShowsRepoImpl(get()) }
     }
     val commonRepositoryModule= module {
         single { CommonRepositoryModel(get(),get(),get()) }

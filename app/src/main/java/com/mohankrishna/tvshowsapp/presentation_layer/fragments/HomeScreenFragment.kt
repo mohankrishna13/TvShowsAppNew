@@ -1,6 +1,7 @@
 package com.mohankrishna.tvshowsapp.presentation_layer.fragments
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -43,10 +44,13 @@ class HomeScreenFragment : Fragment() {
 
     }
 
-    private suspend fun getTrendingData() {
-        viewModel.trendingData.collect(collector = {
-            binding.progressbarLayout.visibility=View.GONE
-            adapter.submitData(it)
-        })
+    private fun getTrendingData() {
+       CoroutineScope(Dispatchers.IO).launch{
+           viewModel.trendingData.collect(collector = {
+               Log.e("PrintData",it.toString())
+               binding.progressbarLayout.visibility=View.GONE
+               adapter.submitData(it)
+           })
+       }
     }
 }
