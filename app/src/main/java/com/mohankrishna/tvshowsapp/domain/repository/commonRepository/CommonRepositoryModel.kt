@@ -10,7 +10,6 @@ import com.mohankrishna.tvshowsapp.presentation_layer.utils.InternetModeProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository,
@@ -28,8 +27,10 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository,
            return onlineTvShowsRepository.getSimilarTvShows(id,apiKey,currentPage)
     }
 
-    suspend fun getWeekTvShowsData(api_key:String):MutableLiveData<ResponseListerner>{
-        var response= MutableLiveData<ResponseListerner>()
+    suspend fun getWeekTvShowsData(api_key:String,pageNumber:Int):Response<TvShowsDataModel>{
+        return  onlineTvShowsRepository.getWeekTrendingShows(api_key,pageNumber)
+
+    /*var response= MutableLiveData<ResponseListerner>()
         if(internetModeProvider.isNetworkConnected){
             response= onlineTvShowsRepository.getWeekTrendingShows(api_key)
         }else{
@@ -41,13 +42,16 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository,
                 }
             }
         }
-        return response
+        return response*/
     }
 
-    fun getTrendingTvShowsData(api_key:String):MutableLiveData<ResponseListerner>{
-        var response= MutableLiveData<ResponseListerner>()
+    suspend fun getTrendingTvShowsData(api_key:String,pageNumber:Int):Response<TvShowsDataModel>{
+      return onlineTvShowsRepository.getTrendingTvShows(api_key,pageNumber)
+
+      //Without pagination Don't delete this code
+       /* var response= MutableLiveData<ResponseListerner>()
         if(internetModeProvider.isNetworkConnected){
-            response= onlineTvShowsRepository.getTrendingTvShows(api_key)
+            response= onlineTvShowsRepository.getTrendingTvShows(api_key,pageNumber)
         }else{
             CoroutineScope(Dispatchers.IO).launch {
                 localTvShowsRepository.getTrendingTvShows().collect{
@@ -57,30 +61,30 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository,
                 }
             }
         }
-        return response
+        return response*/
     }
 
     fun getTvShowsByName(searchKey:String):MutableLiveData<ResponseListerner>{
-        var response= MutableLiveData<ResponseListerner>()
-        if(internetModeProvider.isNetworkConnected){
+        var response=MutableLiveData<ResponseListerner>()
+       if(internetModeProvider.isNetworkConnected){
             response= onlineTvShowsRepository.getTvShowsByName(BuildConfig.API_KEY,searchKey)
-        }else{
-            var colleciton=localTvShowsRepository.getTvShowDataByName(searchKey)
-            CoroutineScope(Dispatchers.Main).launch {
-                colleciton.collect{
-                    response.value= ResponseListerner.Success(it)
-                }
-            }
-            /* // CoroutineScope(Dispatchers.IO).launch {
+       } else {
+           var colleciton = localTvShowsRepository.getTvShowDataByName(searchKey)
+           CoroutineScope(Dispatchers.Main).launch {
+               colleciton.collect {
+                   response.value = ResponseListerner.Success(it)
+               }
+           }
+           /* CoroutineScope(Dispatchers.IO).launch {
                  .collect{
-                     //withContext(Dispatchers.Main){
-                         Log.e("PrintDataByName",it.toString())
+                     withContext(Dispatchers.Main){
                          response.value= ResponseListerner.Success(it)
 
-                     //}
+                     }
                  }
-             //}*/
-        }
+
+        }*/
+       }
         return response
     }
 }

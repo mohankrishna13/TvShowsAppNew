@@ -16,7 +16,7 @@ class DetailsScreenViewModel(var commonRepositoryModel: CommonRepositoryModel):V
         searchId.value=name
     }
     val moviesList = Pager(PagingConfig(1)) {
-            PaginationDataSource(commonRepositoryModel,searchId.value!!.toInt())
+            PaginationDataSource(commonRepositoryModel,searchId.value!!,"similar")
     }.flow
 
     fun setFavouriteFlag(updatedData:Result){

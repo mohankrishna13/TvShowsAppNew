@@ -10,7 +10,9 @@ import retrofit2.http.Query
 
 interface TvShowsApiInterface {
     @GET("trending/tv/day?")
-    fun getDayTrendingTvShows(@Query("api_key") api_key : String):Call<TvShowsDataModel>
+    suspend fun getDayTrendingTvShows(@Query("page") page : Int,
+                              @Query("api_key") api_key : String)
+    :Response<TvShowsDataModel>
 
     @GET("tv/{series_id}/similar")
     suspend fun getSimilarTvShows(
@@ -19,10 +21,12 @@ interface TvShowsApiInterface {
         @Query("page") page : Int): Response<TvShowsDataModel>
 
     @GET("trending/tv/week?")
-    fun getWeekTvShows(@Query("api_key") api_key : String): Call<TvShowsDataModel>
+    suspend fun getWeekTvShows(@Query("api_key") api_key : String,@Query("page") page : Int): Response<TvShowsDataModel>
 
     @GET("search/tv?")
-    fun getTvShowsByName( @Query("api_key") api_key : String,
-                          @Query("query") name:String): Call<TvShowsDataModel>
+     fun getTvShowsByName(
+        @Query("api_key") api_key : String,
+                          @Query("query") name:String
+                          ): Call<TvShowsDataModel>
 
 }

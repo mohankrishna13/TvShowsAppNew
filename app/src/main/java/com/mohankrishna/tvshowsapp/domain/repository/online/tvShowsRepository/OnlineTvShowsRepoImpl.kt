@@ -1,5 +1,6 @@
 package com.mohankrishna.tvshowsapp.domain.repository.online.tvShowsRepository
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.mohankrishna.tvshowsapp.ModelClass.TvShowsDataModel
 import com.mohankrishna.tvshowsapp.data_layer.online.retrofit.TvShowsApiInterface
@@ -8,15 +9,17 @@ import com.mohankrishna.tvshowsapp.domain.repository.offline.LocalTvShowsReposit
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class OnlineTvShowsRepoImpl(var tvShowsApiInterface: TvShowsApiInterface,
                             var localDatabaseDao: LocalTvShowsRepository): OnlineTvShowsRepository {
-    override fun getTrendingTvShows(apiKey: String): MutableLiveData<ResponseListerner> {
-        var result = MutableLiveData<ResponseListerner>()
+    override suspend fun getTrendingTvShows(apiKey: String,pageNumber:Int):
+            Response<TvShowsDataModel> {
+        return tvShowsApiInterface.getDayTrendingTvShows(pageNumber,apiKey)
+        //Without pagination Don't delete
+       /* var result = MutableLiveData<ResponseListerner>()
         CoroutineScope(Dispatchers.IO).launch{
             var call = tvShowsApiInterface.getDayTrendingTvShows(apiKey)
             CoroutineScope(Dispatchers.Main).launch {
@@ -66,11 +69,14 @@ class OnlineTvShowsRepoImpl(var tvShowsApiInterface: TvShowsApiInterface,
                 }
             })
         }
-        return result
+        return result*/
     }
 
-    override suspend fun getWeekTrendingShows(apiKey: String): MutableLiveData<ResponseListerner> {
-        var result = MutableLiveData<ResponseListerner>()
+    override suspend fun getWeekTrendingShows(apiKey: String,pageNumber: Int): Response<TvShowsDataModel> {
+
+        return tvShowsApiInterface.getWeekTvShows(apiKey,pageNumber)
+       //Don't Delete
+        /*var result = MutableLiveData<ResponseListerner>()
         CoroutineScope(Dispatchers.IO).launch {
             var call = tvShowsApiInterface.getWeekTvShows(apiKey)
             CoroutineScope(Dispatchers.Main).launch {
@@ -116,7 +122,7 @@ class OnlineTvShowsRepoImpl(var tvShowsApiInterface: TvShowsApiInterface,
                 }
             })
         }
-        return result
+        return result*/
     }
 
     override suspend fun getSimilarTvShows(id: Int, apiKey: String, currentPage: Int):
@@ -124,8 +130,7 @@ class OnlineTvShowsRepoImpl(var tvShowsApiInterface: TvShowsApiInterface,
         return tvShowsApiInterface.getSimilarTvShows(id, apiKey, currentPage)
     }
 
-    override  fun getTvShowsByName(apiKey: String, searchKey: String):
-            MutableLiveData<ResponseListerner> {
+    override fun getTvShowsByName(apiKey: String, searchKey: String): MutableLiveData<ResponseListerner> {
         var result = MutableLiveData<ResponseListerner>()
         CoroutineScope(Dispatchers.IO).launch{
             var call = tvShowsApiInterface.getTvShowsByName(apiKey,searchKey)

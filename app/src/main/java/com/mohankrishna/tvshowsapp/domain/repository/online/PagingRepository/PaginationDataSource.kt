@@ -11,7 +11,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class PaginationDataSource(private var apiRepository:CommonRepositoryModel,var id:Int):
+class PaginationDataSource(private var apiRepository:CommonRepositoryModel,
+                           var similarId:String,var typeOf:String):
     PagingSource<Int, Result>() {
     override fun getRefreshKey(state: PagingState<Int, Result>): Int? {
         return null
@@ -21,9 +22,22 @@ class PaginationDataSource(private var apiRepository:CommonRepositoryModel,var i
         return try {
             val currentPage = params.key ?: 1
             var responseData= mutableListOf<Result>()
-            var dataCall=apiRepository.
-            getSimilarTypeData(id,BuildConfig.API_KEY,currentPage)
-            responseData.addAll(dataCall.body()?.results?: emptyList())
+            if(typeOf.compareTo("allTrending")==0){
+                var dataCall=apiRepository.
+                getTrendingTvShowsData(BuildConfig.API_KEY,currentPage)
+                responseData.addAll(dataCall.body()?.results?: emptyList())
+            }
+            else if(typeOf.compareTo("weekData")==0){
+                var dataCall=apiRepository.
+                getWeekTvShowsData(BuildConfig.API_KEY,currentPage)
+                responseData.addAll(dataCall.body()?.results?: emptyList())
+            }
+            else{
+                var dataCall=apiRepository.
+                getSimilarTypeData(similarId.toInt(),BuildConfig.API_KEY,currentPage)
+                responseData.addAll(dataCall.body()?.results?: emptyList())
+
+            }
             LoadResult.Page(
                 data = responseData,
                 prevKey = if (currentPage == 1) null else -1,

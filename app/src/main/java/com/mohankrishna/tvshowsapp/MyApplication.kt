@@ -56,8 +56,8 @@ class MyApplication:Application() {
         single { CommonRepositoryModel(get(),get(),get()) }
     }
     val viewmodelsModule= module{
-        factory { MainActivityViewModel(get()) }
-        factory { DetailsScreenViewModel(get()) }
+        single { MainActivityViewModel(get()) }
+        single { DetailsScreenViewModel(get()) }
     }
 
 

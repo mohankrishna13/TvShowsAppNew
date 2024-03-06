@@ -1,6 +1,7 @@
 package com.mohankrishna.tvshowsapp.data_layer.online.retrofit
 
 import com.google.gson.GsonBuilder
+import com.mohankrishna.tvshowsapp.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

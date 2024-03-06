@@ -6,8 +6,8 @@ import com.mohankrishna.tvshowsapp.domain.model.ResponseListerner
 import retrofit2.Response
 
 interface OnlineTvShowsRepository {
-    fun getTrendingTvShows(apiKey: String): MutableLiveData<ResponseListerner>
-    suspend fun getWeekTrendingShows(apiKey: String):MutableLiveData<ResponseListerner>
+    suspend fun getTrendingTvShows(apiKey: String,pageNumber:Int): Response<TvShowsDataModel>
+    suspend fun getWeekTrendingShows(apiKey: String,pageNumber: Int):Response<TvShowsDataModel>
     suspend fun getSimilarTvShows(id: Int, apiKey: String, currentPage: Int):Response<TvShowsDataModel>
     fun getTvShowsByName(apiKey: String, searchKey: String):MutableLiveData<ResponseListerner>
 }
