@@ -31,7 +31,7 @@ class PaginationDataSource(private var apiRepository:CommonRepositoryModel,
             else if(typeOf.compareTo("weekData")==0){
                 var dataCall=apiRepository.
                 getWeekTvShowsData(BuildConfig.API_KEY,currentPage)
-                responseData.addAll(dataCall.body()?.results?: emptyList())
+                responseData.addAll(dataCall)
             }
             else{
                 var dataCall=apiRepository.

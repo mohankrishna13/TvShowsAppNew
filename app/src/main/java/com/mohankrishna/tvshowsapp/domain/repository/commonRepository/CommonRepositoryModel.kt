@@ -33,8 +33,30 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository, 
            return onlineTvShowsRepository.getSimilarTvShows(id,apiKey,currentPage)
     }
 
-    suspend fun getWeekTvShowsData(api_key:String,pageNumber:Int):Response<TvShowsDataModel>{
-        return  onlineTvShowsRepository.getWeekTrendingShows(api_key,pageNumber)
+    suspend fun getWeekTvShowsData(api_key:String,pageNumber:Int):List<Result>{
+        if(internetModeProvider.isNetworkConnected){
+            var response=
+                onlineTvShowsRepository.getWeekTrendingShows(api_key,pageNumber)
+            if(response.isSuccessful){
+                var resultList=response.body()?.results
+                if(resultList!=null){
+                    for(item in resultList!!){
+                        localTvShowsRepository.insertTvShowData(item)
+                    }
+                }
+                var limit=20
+                var offset=pageNumber*limit
+
+                return localTvShowsRepository.getTvShowsDataByLimit(limit,offset)
+            }else{
+                return emptyList()
+            }
+        }else{
+            var limit=20
+            var offset=pageNumber*limit
+            return localTvShowsRepository.getTvShowsDataByLimit(limit,offset)
+        }
+       // return  onlineTvShowsRepository.getWeekTrendingShows(api_key,pageNumber)
 
     /*var response= MutableLiveData<ResponseListerner>()
         if(internetModeProvider.isNetworkConnected){
@@ -52,20 +74,27 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository, 
     }
 
     suspend fun getTrendingTvShowsData(api_key:String,pageNumber:Int): List<Result> {
-        var response=onlineTvShowsRepository.getTrendingTvShows(api_key,pageNumber)
-        if(response.isSuccessful){
-            var resultList=response.body()?.results
-            if(resultList!=null){
-                for(item in resultList!!){
-                    localTvShowsRepository.insertTvShowData(item)
+        if(internetModeProvider.isNetworkConnected){
+            var response=onlineTvShowsRepository.getTrendingTvShows(api_key,pageNumber)
+            if(response.isSuccessful){
+                var resultList=response.body()?.results
+                if(resultList!=null){
+                    for(item in resultList!!){
+                        localTvShowsRepository.insertTvShowData(item)
+                    }
                 }
+                var limit=20
+                var offset=pageNumber*limit
+
+                return localTvShowsRepository.getTvShowsDataByLimit(limit,offset)
+            }else{
+                return emptyList()
             }
+        }else{
             var limit=20
             var offset=pageNumber*limit
 
             return localTvShowsRepository.getTvShowsDataByLimit(limit,offset)
-        }else{
-            return emptyList()
         }
       //Without pagination Don't delete this code
        /* var response= MutableLiveData<ResponseListerner>()

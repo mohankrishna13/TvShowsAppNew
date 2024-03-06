@@ -72,16 +72,13 @@ class SearchScreenFragment : Fragment() {
         })
     }
 
-    private  fun fetchDataForWeek() {
+    private fun fetchDataForWeek() {
         binding.weekrecyclerView.visibility=View.VISIBLE
         binding.searchrecyclerView.visibility=View.GONE
        CoroutineScope(Dispatchers.IO).launch {
            myviewModel.trendigDataForWeek.collect {
                 binding.progressbarLayout.visibility=View.GONE
-                CoroutineScope(Dispatchers.Main).launch {
-                    paggingAdapter.submitData(it)
-
-                }
+               paggingAdapter.submitData(it)
             }
         }
     }
