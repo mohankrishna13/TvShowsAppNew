@@ -26,5 +26,5 @@ interface TvShowsDao {
     fun getTvShowsByName(it: String?):Flow<List<Result>>
 
     @Query("SELECT * FROM MyShowsTable LIMIT :limit OFFSET :offset")
-    suspend fun getTvShowsDataByLimit(limit: Int, offset: Int): List<Result>
+     fun getTvShowsDataByLimit(limit: Int, offset: Int): List<Result>
 }

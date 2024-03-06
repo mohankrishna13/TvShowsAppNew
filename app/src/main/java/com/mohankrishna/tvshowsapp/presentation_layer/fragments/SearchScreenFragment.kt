@@ -39,10 +39,18 @@ class SearchScreenFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        paggingAdapter= HomePaginationAdapter()
-        searchNormalAdapter= HomeScreenAdapter(arrayListOf())
-        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
 
+        //Week Recycler with pagination
+        paggingAdapter= HomePaginationAdapter()
+        binding.weekrecyclerView.layoutManager = GridLayoutManager(requireContext(),2)
+        binding.weekrecyclerView.adapter=paggingAdapter
+
+       //Search recyclerview without pagination
+        binding.searchrecyclerView.layoutManager = GridLayoutManager(requireContext(),2)
+        searchNormalAdapter= HomeScreenAdapter(arrayListOf())
+        binding.searchrecyclerView.adapter=searchNormalAdapter
+
+        //Observe for search key
         myviewModel.searchKeyValue.observe(viewLifecycleOwner, Observer {
             if(it.isBlank() || it.isEmpty()){
                 fetchDataForWeek()
@@ -51,10 +59,11 @@ class SearchScreenFragment : Fragment() {
             }
         })
 
-
     }
 
     private fun fetchDataByName(it: String?) {
+        binding.weekrecyclerView.visibility=View.GONE
+        binding.searchrecyclerView.visibility=View.VISIBLE
         myviewModel.searchTvShows(it.toString()).observe(viewLifecycleOwner, Observer {
             it.observe(viewLifecycleOwner, Observer {
                 binding.progressbarLayout.visibility=View.GONE
@@ -64,11 +73,12 @@ class SearchScreenFragment : Fragment() {
     }
 
     private  fun fetchDataForWeek() {
+        binding.weekrecyclerView.visibility=View.VISIBLE
+        binding.searchrecyclerView.visibility=View.GONE
        CoroutineScope(Dispatchers.IO).launch {
            myviewModel.trendigDataForWeek.collect {
                 binding.progressbarLayout.visibility=View.GONE
                 CoroutineScope(Dispatchers.Main).launch {
-                    binding.recyclerView.adapter=paggingAdapter
                     paggingAdapter.submitData(it)
 
                 }
@@ -77,7 +87,7 @@ class SearchScreenFragment : Fragment() {
     }
 
     private fun setDataToViews(it: ResponseListerner?) {
-        binding.recyclerView.adapter=searchNormalAdapter
+        binding.searchrecyclerView.adapter=searchNormalAdapter
         when (it) {
             is ResponseListerner.Loading -> {
                 binding.progressbarLayout.visibility = View.VISIBLE

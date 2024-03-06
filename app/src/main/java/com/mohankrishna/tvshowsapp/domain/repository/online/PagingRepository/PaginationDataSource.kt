@@ -1,14 +1,19 @@
 package com.mohankrishna.tvshowsapp.domain.repository.online.PagingRepository
 
+import android.util.Log
+import androidx.lifecycle.Observer
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.mohankrishna.tvshowsapp.BuildConfig
 import com.mohankrishna.tvshowsapp.ModelClass.Result
+import com.mohankrishna.tvshowsapp.MyApplication
 import com.mohankrishna.tvshowsapp.domain.repository.commonRepository.CommonRepositoryModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class PaginationDataSource(private var apiRepository:CommonRepositoryModel, var similarId:String,var typeOf:String): PagingSource<Int, Result>() {
-
-
+class PaginationDataSource(private var apiRepository:CommonRepositoryModel,
+                           var similarId:String,var typeOf:String): PagingSource<Int, Result>() {
 
     override fun getRefreshKey(state: PagingState<Int, Result>): Int? {
         return null
@@ -19,8 +24,9 @@ class PaginationDataSource(private var apiRepository:CommonRepositoryModel, var 
             val currentPage = params.key ?: 1
             var responseData= mutableListOf<Result>()
             if(typeOf.compareTo("allTrending")==0){
-                var dataCall=apiRepository.getTrendingTvShowsData(BuildConfig.API_KEY,currentPage)
-                responseData.addAll(dataCall)
+                var data= emptyList<Result>()
+                data=apiRepository.getTrendingTvShowsData(BuildConfig.API_KEY,currentPage)
+                responseData.addAll(data)
             }
             else if(typeOf.compareTo("weekData")==0){
                 var dataCall=apiRepository.

@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mohankrishna.tvshowsapp.R
 import com.mohankrishna.tvshowsapp.databinding.FragmentHomeScreenBinding
@@ -36,21 +38,16 @@ class HomeScreenFragment : Fragment() {
         adapter= HomePaginationAdapter()
         binding.recyclerView.adapter=adapter
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(),2)
-
-
-        CoroutineScope(Dispatchers.IO).launch {
-            getTrendingData()
-        }
-
+        getTrendingData()
     }
 
     private fun getTrendingData() {
-       CoroutineScope(Dispatchers.IO).launch{
-           viewModel.trendingData.collect(collector = {
-               Log.e("PrintData",it.toString())
-               binding.progressbarLayout.visibility=View.GONE
-               adapter.submitData(it)
-           })
-       }
+        CoroutineScope(Dispatchers.IO).launch {
+            viewModel.trendingData.collect(collector = {
+                Log.e("PrintCurrentThread", "Fragment - 50 " + Thread.currentThread().name)
+                binding.progressbarLayout.visibility = View.GONE
+                adapter.submitData(it)
+            })
+        }
     }
 }

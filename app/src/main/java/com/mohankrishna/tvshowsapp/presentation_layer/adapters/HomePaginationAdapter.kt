@@ -51,6 +51,15 @@ class HomePaginationAdapter: PagingDataAdapter<Result,HomePaginationAdapter.MyVi
                     .error(R.drawable.error)
                     .into(singleCardViewLayoutBinding.imagePoster)
             }
+
+            if(item?.is_favourite==null){
+                singleCardViewLayoutBinding.notFavourite.visibility=View.VISIBLE
+                singleCardViewLayoutBinding.favourite.visibility=View.GONE
+            }else{
+                singleCardViewLayoutBinding.favourite.visibility=View.VISIBLE
+                singleCardViewLayoutBinding.notFavourite.visibility=View.GONE
+            }
+
             singleCardViewLayoutBinding.myCardView.setOnClickListener(object : View.OnClickListener {
                 override fun onClick(p0: View?) {
                     val intent = Intent(MyApplication.getContext(), DetailScreenActivity::class.java)
