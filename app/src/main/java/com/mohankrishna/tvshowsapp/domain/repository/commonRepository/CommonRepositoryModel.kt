@@ -85,8 +85,11 @@ class CommonRepositoryModel(var localTvShowsRepository: LocalTvShowsRepository, 
                 }
                 var limit=20
                 var offset=pageNumber*limit
-
-                return localTvShowsRepository.getTvShowsDataByLimit(limit,offset)
+                var data=localTvShowsRepository.getTvShowsDataByLimit(limit,offset)
+                if(data.isEmpty()){
+                    data=resultList!!
+                }
+                return data
             }else{
                 return emptyList()
             }
