@@ -85,6 +85,8 @@ class DetailScreenActivity : AppCompatActivity() {
             .into(binding.imagePoster)
 
 
+        binding.showDescription.text=data?.overview
+
         myviewModel.setData(data?.id.toString())
         CoroutineScope(Dispatchers.IO).launch {
             myviewModel.moviesList.collect {
